@@ -371,12 +371,6 @@ func (r *Raft) Step(m pb.Message) error {
 
 	if m.MsgType == pb.MessageType_MsgRequestVote {
 		reject := true
-		//if ((r.Vote == None && r.Lead == None) || r.Vote == m.From) &&
-		//	(m.LogTerm > r.RaftLog.LastTerm() ||
-		//		(m.LogTerm == r.RaftLog.LastTerm() && m.Index >= r.RaftLog.LastIndex())) {
-		//	reject = false
-		//	r.Vote = m.From
-		//}
 		if r.Term > m.Term {
 			reject = true
 		} else if r.Term == m.Term {
