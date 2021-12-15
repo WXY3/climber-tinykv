@@ -90,10 +90,8 @@ func TestLeaderBcastBeat2AA(t *testing.T) {
 	r := newTestRaft(1, []uint64{1, 2, 3}, 10, hi, NewMemoryStorage())
 	r.becomeCandidate()
 	r.becomeLeader()
-
 	r.Step(pb.Message{MsgType: pb.MessageType_MsgPropose, Entries: []*pb.Entry{{}}})
 	r.readMessages() // clear message
-
 	for i := 0; i < hi; i++ {
 		r.tick()
 	}
@@ -136,7 +134,6 @@ func testNonleaderStartElection(t *testing.T, state StateType) {
 	case StateCandidate:
 		r.becomeCandidate()
 	}
-
 	for i := 1; i < 2*et; i++ {
 		r.tick()
 	}
@@ -189,12 +186,10 @@ func TestLeaderElectionInOneRoundRPC2AA(t *testing.T) {
 	}
 	for i, tt := range tests {
 		r := newTestRaft(1, idsBySize(tt.size), 10, 1, NewMemoryStorage())
-
 		r.Step(pb.Message{From: 1, To: 1, MsgType: pb.MessageType_MsgHup})
 		for id, vote := range tt.votes {
 			r.Step(pb.Message{From: id, To: 1, Term: r.Term, MsgType: pb.MessageType_MsgRequestVoteResponse, Reject: !vote})
 		}
-
 		if r.State != tt.state {
 			t.Errorf("#%d: state = %s, want %s", i, r.State, tt.state)
 		}
